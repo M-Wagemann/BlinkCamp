@@ -1,22 +1,33 @@
 "use strict";
+
 let lastFrameTime;
 let tickEvent;
+let isRunning = false;
+
 const loopDetail = {
     dTime: 0
 };
-const Initialize = () => {
+
+export const StartGameLoop = () => {
+
+    if (isRunning) return;
+
+    isRunning = true;
+
     lastFrameTime = performance.now();
-    tickEvent = new CustomEvent('GameLoop:Update', { detail: loopDetail });
-    // Start the game loop
+    tickEvent = new CustomEvent("GameLoop:Update", { detail: loopDetail });
+
     window.requestAnimationFrame(GameLoop);
 };
+
 const GameLoop = () => {
-    // Calculate dTime
-    loopDetail.dTime = (performance.now() - lastFrameTime) / 1000; // ms to seconds
+
+    if (!isRunning) return;
+
+    loopDetail.dTime = (performance.now() - lastFrameTime) / 1000;
     lastFrameTime = performance.now();
-    // Call update on all living game elements
+
     window.dispatchEvent(tickEvent);
-    // Schedule the next game loop when possible
+
     window.requestAnimationFrame(GameLoop);
 };
-Initialize();

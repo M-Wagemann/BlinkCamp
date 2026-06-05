@@ -1,33 +1,54 @@
-import { Dot } from "./Dot.js";
+import { Dot } from "./Dot/Dot.js";
+
 let lastFrameTime;
-let tickEvent;
-let leftArrowClickEvent;
-let rightArrowClickEvent;
 let dTime;
+let gameStarted = false;
+
 const Initialize = () => {
-    lastFrameTime = performance.now();
+
+    console.log("App initialized");
+
     new Dot(document.getElementById("dot"));
-    tickEvent = new CustomEvent('App:Update', { detail: dTime });
-    leftArrowClickEvent = new CustomEvent('App:LeftArrowClick');
-    const leftArrow = document.querySelector(".arrow.left");
-    leftArrow.addEventListener("click", () => {
-        window.dispatchEvent(leftArrowClickEvent);
+
+    // ✅ Keydown Listener
+    window.addEventListener("keydown", (event) => {
+
+        console.log("Key pressed:", event.code);
+
+        // Robuster Check (funktioniert in allen Browsern)
+        if ((event.code === "Space" || event.key === " ") && !gameStarted) {
+            event.preventDefault();
+            StartGame();
+        }
     });
-    rightArrowClickEvent = new CustomEvent('App:RightArrowClick');
-    const rightArrow = document.querySelector(".arrow.right");
-    rightArrow.addEventListener("click", () => {
-        window.dispatchEvent(rightArrowClickEvent);
-    });
-    // Start the game loop
-    window.requestAnimationFrame(GameLoop);
 };
-const GameLoop = () => {
-    // Calculate dTime
-    dTime = (performance.now() - lastFrameTime) / 1000; // ms to seconds
+
+const StartGame = () => {
+
+    console.log("Game started");
+
+    gameStarted = true;
+
+    const startScreen = document.getElementById("startscreen");
+    if (startScreen) {
+        startScreen.classList.add("hidden");
+    }
+
     lastFrameTime = performance.now();
-    // Call update on all living game elements
-    window.dispatchEvent(tickEvent);
-    // Schedule the next game loop when possible
     window.requestAnimationFrame(GameLoop);
 };
+
+const GameLoop = () => {
+
+    dTime = (performance.now() - lastFrameTime) / 1000;
+    lastFrameTime = performance.now();
+
+    window.dispatchEvent(
+        new CustomEvent("App:Update", { detail: dTime })
+    );
+
+    window.requestAnimationFrame(GameLoop);
+};
+
 Initialize();
+
