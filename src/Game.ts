@@ -1,6 +1,9 @@
 import { Dot } from "./Dot/Dot.js";
 import { SubscribeToRoutineChangedEvent } from "./RoutineTitleFollower.js";
 import { SubscribeToNotificationsButtonClick } from "./PushNotifications.js";
+import { StartGameLoop } from "./Engine/GameLoop.js";
+
+console.log("GAME LOADED");
 
 const InitializeScene = ():void  => 
 {
@@ -74,5 +77,22 @@ const SetReminderButtonEvent = () : void =>
         window.dispatchEvent(notificationsClickEvent);
     });
 }
+
+window.addEventListener("keydown", (event: KeyboardEvent) =>
+{
+    if (event.code === "Space")
+    {
+        event.preventDefault();
+
+        const startScreen = document.getElementById("startscreen");
+        if (startScreen)
+        {
+            startScreen.style.display = "none";
+        }
+
+        StartGameLoop();
+    }
+});
+
 
 InitializeScene();

@@ -10,7 +10,7 @@ const Initialize = () => {
 
     new Dot(document.getElementById("dot"));
 
-    // ✅ Keydown Listener
+    // Keydown Listener
     window.addEventListener("keydown", (event) => {
 
         console.log("Key pressed:", event.code);

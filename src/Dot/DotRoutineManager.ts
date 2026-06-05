@@ -1,3 +1,4 @@
+import { FourMinuteHalfDirectionChangeRoutine } from './Routines/FourMinuteHalfDirectionChangeRoutine.js';
 import { DirectionChangingRotationsRoutine } from './Routines/DirectionChangingRotationsRoutine.js';
 import { DirectionChangingLeftRight } from './Routines/DirectionChangingLeftRight.js';
 import { PeekabooRoutine } from './Routines/PeekabooRoutine.js';
@@ -17,6 +18,7 @@ let RoutineChanged = new CustomEvent('DotRoutineManager:RoutineChanged');
 
 const RoutineManager: { activeDotRoutines: Array<IDotRoutine>, currentRoutineIndex: number} = {
     activeDotRoutines: [
+        FourMinuteHalfDirectionChangeRoutine,
         CounterClockwiseRotationRoutine,
         ClockwiseRotationRoutine,
         DirectionChangingRotationsRoutine,
