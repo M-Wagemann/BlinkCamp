@@ -67,10 +67,7 @@ export const FourMinuteHalfDirectionChangeRoutine = {
         // Nach 4 Minuten stoppen
         if (totalTimePassed >= TOTAL_DURATION) {
             StopGameLoop();
-            const startScreen = document.getElementById("startscreen");
-            if (startScreen) {
-                startScreen.style.display = "flex";
-            }
+            window.dispatchEvent(new CustomEvent('Game:BlockComplete'));
             ResetState();
         }
     },

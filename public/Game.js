@@ -2,6 +2,13 @@ import { Dot } from "./Dot/Dot.js";
 import { SubscribeToRoutineChangedEvent } from "./RoutineTitleFollower.js";
 import { SubscribeToNotificationsButtonClick } from "./PushNotifications.js";
 import { StartGameLoop } from "./Engine/GameLoop.js";
+import RoutineManager from "./Dot/DotRoutineManager.js";
+const blockRoutineIndices = [0, 1, 2];
+const blockLabels = [
+    "Press SPACE to start",
+    "Block 1 complete. Press SPACE for Block 2",
+    "Block 2 complete. Press SPACE for Block 3"
+];
 console.log("GAME LOADED");
 const InitializeScene = () => {
     new Dot(document.getElementById("dot"));
@@ -55,20 +62,32 @@ const SetRadiusChangeEvent = () => {
         window.dispatchEvent(radiusValueChanged);
     });
 };
-const SetReminderButtonEvent = () => {
-    const notificationsClickEvent = new CustomEvent('Game:NotificationsButtonClick');
-    const button = document.getElementById("notifications-button");
-    button.addEventListener("click", () => {
-        window.dispatchEvent(notificationsClickEvent);
-    });
+
+const showStartScreen = (message) => {
+    const startScreen = document.getElementById("startscreen");
+    const p = startScreen === null || startScreen === void 0 ? void 0 : startScreen.querySelector("p");
+    if (startScreen)
+        startScreen.style.display = "flex";
+    if (p)
+        p.textContent = message;
 };
+let currentBlock = 0;
+window.addEventListener('Game:BlockComplete', () => {
+    currentBlock++;
+    if (currentBlock < blockRoutineIndices.length) {
+        showStartScreen(blockLabels[currentBlock]);
+    }
+    else {
+        showStartScreen("All done! Thanks for participating.");
+    }
+});
 window.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
+    if (event.code === "Space" && currentBlock < blockRoutineIndices.length) {
         event.preventDefault();
         const startScreen = document.getElementById("startscreen");
-        if (startScreen) {
+        if (startScreen)
             startScreen.style.display = "none";
-        }
+        RoutineManager.currentRoutineIndex = blockRoutineIndices[currentBlock];
         StartGameLoop();
     }
 });
