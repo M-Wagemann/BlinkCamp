@@ -1,4 +1,3 @@
-import { FourMinuteHalfDirectionChangeRoutine } from './Routines/FourMinuteHalfDirectionChangeRoutine.js';
 import { DirectionChangingRotationsRoutine } from './Routines/DirectionChangingRotationsRoutine.js';
 import { DirectionChangingLeftRight } from './Routines/DirectionChangingLeftRight.js';
 import { PeekabooRoutine } from './Routines/PeekabooRoutine.js';
@@ -11,14 +10,17 @@ import { UpDownRoutine } from "./Routines/UpDownRoutine.js";
 import { DiagonalUpwardRoutine } from "./Routines/DiagonalUpwardRoutine.js";
 import { DiagonalDownwardRoutine } from './Routines/DiagonalDownwardRoutine.js';
 import { WaveRoutine } from "./Routines/WaveRoutine.js";
-import { FourMinuteWaveRoutine } from './Routines/FourMinuteWaveRoutine.js';
-import { FourMinuteDirectionChangingRoutine } from './Routines/FourMinuteDirectionChangingRoutine.js';
+import { TwoMinuteCircleRoutine } from './Routines/TwoMinuteCircleRoutine.js';
+import { TwoMinuteWaveRoutine } from "./Routines/TwoMinuteWaveRoutine.js";
+import { TwoMinuteDirectionChangingCircleRoutine } from "./Routines/TwoMinuteDirectionChangingCircleRoutine.js";
+import { TwoMinuteDirectionChangingWaveRoutine } from "./Routines/TwoMinuteDirectionChangingWaveRoutine.js";
 let RoutineChanged = new CustomEvent('DotRoutineManager:RoutineChanged');
 const RoutineManager = {
     activeDotRoutines: [
-        FourMinuteHalfDirectionChangeRoutine,
-        FourMinuteWaveRoutine,
-        FourMinuteDirectionChangingRoutine,
+        TwoMinuteCircleRoutine,
+        TwoMinuteWaveRoutine,
+        TwoMinuteDirectionChangingCircleRoutine,
+        TwoMinuteDirectionChangingWaveRoutine,
         CounterClockwiseRotationRoutine,
         ClockwiseRotationRoutine,
         DirectionChangingRotationsRoutine,

@@ -1,111 +1,56 @@
-import { Dot } from "./Dot/Dot.js";
-import { SubscribeToRoutineChangedEvent } from "./RoutineTitleFollower.js";
-import { SubscribeToNotificationsButtonClick } from "./PushNotifications.js";
 import { StartGameLoop } from "./Engine/GameLoop.js";
+import { Dot } from "./Dot/Dot.js";
 import RoutineManager from "./Dot/DotRoutineManager.js";
 
-const blockRoutineIndices = [0, 1, 2];
-const blockLabels = [
-    "Press SPACE to start",
-    "Block 1 complete. Press SPACE for Block 2",
-    "Block 2 complete. Press SPACE for Block 3"
-];
+const blocks = [0, 1, 2, 3];
+const blockNames = ["Block 1: Kreis", "Block 2: Unendlich", "Block 3: Kreis variabel", "Block 4: Unendlich variabel"];
+const pauseAfterBlock = [90, 90, 90, 180];
 
-console.log("GAME LOADED");
+let nextBlockIndex = 0;
+let countdownInterval: number | null = null;
 
-const InitializeScene = ():void  => 
-{
-    new Dot(document.getElementById("dot")!);
-    // TODO
-    // Creat UIEventDispatcher class (component base type) and move them there, and change the name of this class to GameScene.
-    SetLeftArrowEvent();
-    SetRightArrowEvent();
-    SetVelocityChangeEvent();
-    SetRadiusChangeEvent();
-    // SetReminderButtonEvent();
+const msg = document.getElementById("startscreen-message") as HTMLElement;
+const countdownEl = document.getElementById("countdown") as HTMLElement;
+const startScreen = document.getElementById("startscreen") as HTMLElement;
 
-    // TODO
-    // Create a component base class which has awake and update methods, and instantiate those classes instead.
-    SubscribeToRoutineChangedEvent();
-    SubscribeToNotificationsButtonClick();
-}
+const showPauseScreen = (message: string, seconds: number) => {
+    startScreen.style.display = "flex";
+    msg.textContent = message;
+    countdownEl.style.display = "block";
 
-const SetLeftArrowEvent = () :void => 
-{
-    const leftArrowClickEvent = new CustomEvent('Game:LeftArrowClick');
-    const leftArrow: HTMLDivElement = document.querySelector(".arrow.left") as HTMLDivElement;
-    leftArrow.addEventListener("click", () => {
-        window.dispatchEvent(leftArrowClickEvent);
-      });
-}
-
-const SetRightArrowEvent = () : void => 
-{
-    const rightArrowClickEvent = new CustomEvent('Game:RightArrowClick');
-    const rightArrow = document.querySelector(".arrow.right") as HTMLDivElement;
-    rightArrow.addEventListener("click", () => {
-        window.dispatchEvent(rightArrowClickEvent);
-    });
-}
-
-const SetVelocityChangeEvent = () => {
-  const velocitySlider = document.getElementById("velocityslider") as HTMLInputElement;
-  const velocityValueChanged = new CustomEvent('Game:VelocityValueChanged', {
-    detail: {
-      velocity: velocitySlider.value
-    }
-  });
-
-  velocitySlider.addEventListener("input", () => {
-    velocityValueChanged.detail.velocity = velocitySlider.value;
-    window.dispatchEvent(velocityValueChanged);
-  });
+    let remaining = seconds;
+    countdownEl.textContent = String(remaining);
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = window.setInterval(() => {
+        remaining--;
+        countdownEl.textContent = String(Math.max(0, remaining));
+        if (remaining <= 0) { clearInterval(countdownInterval!); countdownInterval = null; }
+    }, 1000);
 };
-
-const SetRadiusChangeEvent = () => {
-  const radiusSlider = document.getElementById("sizeslider") as HTMLInputElement;
-  const radiusValueChanged = new CustomEvent('Game:RadiusValueChanged', {
-    detail: {
-      radius: radiusSlider.value
-    }
-  });
-
-  radiusSlider.addEventListener("input", () => {
-    radiusValueChanged.detail.radius = radiusSlider.value;
-    window.dispatchEvent(radiusValueChanged);
-  });
-};
-
-
-
-
-const showStartScreen = (message: string) => {
-    const startScreen = document.getElementById("startscreen");
-    const p = startScreen?.querySelector("p");
-    if (startScreen) startScreen.style.display = "flex";
-    if (p) p.textContent = message;
-};
-
-let currentBlock = 0;
 
 window.addEventListener('Game:BlockComplete', () => {
-    currentBlock++;
-    if (currentBlock < blockRoutineIndices.length) {
-        showStartScreen(blockLabels[currentBlock]);
+    const justFinished = nextBlockIndex - 1;
+    const pause = pauseAfterBlock[justFinished];
+
+    if (nextBlockIndex >= blocks.length) {
+        showPauseScreen("Alle Übungen abgeschlossen. Danke!", pause);
     } else {
-        showStartScreen("All done! Thanks for participating.");
+        showPauseScreen(`${blockNames[justFinished]} abgeschlossen. Drücke SPACE für ${blockNames[nextBlockIndex]}.`, pause);
     }
 });
 
 window.addEventListener("keydown", (event) => {
-    if (event.code === "Space" && currentBlock < blockRoutineIndices.length) {
-        event.preventDefault();
-        const startScreen = document.getElementById("startscreen");
-        if (startScreen) startScreen.style.display = "none";
-        RoutineManager.currentRoutineIndex = blockRoutineIndices[currentBlock];
-        StartGameLoop();
-    }
+    if (event.code !== "Space") return;
+    if (nextBlockIndex >= blocks.length) return;
+    if (startScreen.style.display === "none") return;
+
+    event.preventDefault();
+    startScreen.style.display = "none";
+    countdownEl.style.display = "none";
+
+    RoutineManager.currentRoutineIndex = blocks[nextBlockIndex];
+    nextBlockIndex++;
+    StartGameLoop();
 });
 
-
-InitializeScene();
+new Dot(document.getElementById("dot") as HTMLElement);

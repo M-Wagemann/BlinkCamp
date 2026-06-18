@@ -8,7 +8,6 @@
     <link rel="icon" type="image/svg+xml" href="Assets/dot.svg">
     <title>BlinkCamp - Free Online Eye Muscles And Vision Training Exercises</title>
     <meta name="description" content="BlinkCamp Is A Free Online Software That Helps Individuals Acheive Great Results For Eye Treatment And Visual Improvement. Try It Out Now!">
-    <html lang='en'>
     <meta name="keywords" content="eye training exercises,online eye exercises, vision exercises,eye strain exercises,
     online eye trainer, BlinkCamp, lazy eye exercises">
     <!-- Google tag (gtag.js) -->
@@ -26,8 +25,9 @@
     <div id="startscreen">
         <div class="startcontent">
             <h1>BlinkCamp</h1>
-            <p>Press SPACE to start</p>
+            <p id="startscreen-message">Press SPACE to start</p>
         </div>
+        <div id="countdown" style="display:none; position:absolute; right:40px; top:50%; font-size:2rem; color:white;"></div>
     </div>
 
     <!-- <div id="videoplayercontainer">
@@ -36,26 +36,6 @@
     <div class="game">
         <div class="dot" id="dot"></div>
     </div>
-    <!-- <div class="ui">
-        <div class="arrow left"></div>
-        <div class="arrow right"></div>
-        <div id="velocitytext">Speed</div>
-        <input id="velocityslider" type="range" min="0.25" max="25" value="3" step="0.001">
-        <div id="sizetext">Size</div>
-        <input id="sizeslider" type="range" min="0.01" max="10" value="2" step="0.001">
-        <div class="changeroutine">Change Routine</div>
-        <div class="routinename">Routine Name</div>
-        <!-- <div class="backgroundvideo">Background Video</div> -->
-        <!-- <input type="checkbox" class="backgroundvideotick" checked></div> -->
-        <!-- <div class="notifications">Set Daily Reminders</div>
-        <button class="notifications" id="notifications-button"></button> -->
-        <!-- <a href="https://discord.gg/Fea2vU8JFC" target="_blank">
-            <img src="Assets/discord-icon.svg" class="socialicon" id="discord-icon" alt="Blinkcamp discord icon">
-        </a>
-        <a href="https://github.com/ErezShahaf/BlinkCamp" target="_blank">
-            <img src="Assets/github-icon.svg" class="socialicon" id="github-icon" alt="Blinkcamp github repository icon">
-        </a>
-    </div> --> 
 </body>
 <script src="https://www.youtube.com/iframe_api"></script>
 <!-- <script src="./BackgroundVideo.js"></script> -->
